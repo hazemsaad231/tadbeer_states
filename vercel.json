@@ -1,0 +1,14 @@
+
+
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://fip.tadbeer.sa/public/fip_origin/fip/fip/public/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
