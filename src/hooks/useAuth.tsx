@@ -23,41 +23,14 @@ export const useAuth = () => {
   };
 
   // 1. تسجيل الدخول
-  // const login = async (data: any) => {
-  //   setLoading(true);
-  //   try {
-  //     const response = await axios.post(Login_api, data);
-
-  //     const Data = response?.data;
-  //     const userData = {
-  //       id: Data.user.id,
-  //       name: Data.user.name || 'مستخدم',
-  //       email: Data.user.email,
-  //       phone: Data.user.phone,
-  //       role: data.email === ADMIN_EMAIL ? 'admin' as const : 'client' as const,
-  //     }
-  //     setUser(userData);
-  //     localStorage.setItem('token', Data.token);
-  //     localStorage.setItem('user', JSON.stringify(userData));
-  //     success("تم تسجيل الدخول بنجاح");
-  //     setTimeout(() => navigate("/dashboard"), 500);
-  //   } catch (error) {
-  //     handleError(error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const login = async (data: any) => {
   setLoading(true);
   try {
     const response = await axios.post(Login_api, data);
     const Data = response?.data;
 
-    console.log("Full API Response:", JSON.stringify(Data));
     // ✅ تأكد إن الـ response فيه user و token
     if (!Data || !Data.user || !Data.token) {
-      console.error("Unexpected response structure:", Data);
       throw new Error("استجابة غير متوقعة من الخادم");
     }
 
