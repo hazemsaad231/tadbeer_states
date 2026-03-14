@@ -1,4 +1,4 @@
-import type { ClientStats } from '../../../types';
+import type { ClientStats } from '../../../../../../types/types';
 import {
   ChartContainer,
   ChartTooltip,

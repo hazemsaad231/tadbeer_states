@@ -6,8 +6,7 @@ import {
   Card, CardContent, CardDescription,
   CardFooter, CardHeader, CardTitle,
 } from "@/components/ui/card"
-import type { ClientStats } from '../../../types'
-
+import type { ClientStats } from '../../../../../../types/types';
 const CATEGORY_COLORS = {
   الربحية: "#10B981",
   السيولة: "#3B82F6",
