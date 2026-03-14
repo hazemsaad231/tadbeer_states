@@ -102,7 +102,7 @@ export const RatioSections = ({ data }: { data: ClientStats | null }) => {
 
               {/* Chart */}
               <div>
-                {group.Component && data
+                {data
                   ? <group.Component data={data} />
                   : <div className="h-32 rounded-xl animate-pulse" style={{ background: group.bg }} />
                 }
