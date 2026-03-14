@@ -1,14 +1,17 @@
 // import { defineConfig } from 'vite'
 // import react from '@vitejs/plugin-react'
 // import path from "path"
+// import tailwindcss from "@tailwindcss/vite" // 1. استيراد المحرك الجديد
 
 // // https://vite.dev/config/
 // export default defineConfig({
-//   plugins: [react()],
-
+//   plugins: [
+//     react(), 
+//     tailwindcss() // 2. إضافة Tailwind كـ Plugin لـ Vite مباشرة
+//   ],
 //   resolve: {
 //     alias: {
-//       "@": path.resolve(__dirname, "./src"), // أضف هذا السطر
+//       "@": path.resolve(__dirname, "./src"),
 //     },
 //   },
 //   server: {
@@ -22,29 +25,20 @@
 //   },
 // })
 
+
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from "path"
-import tailwindcss from "@tailwindcss/vite" // 1. استيراد المحرك الجديد
+import tailwindcss from "@tailwindcss/vite"
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(), 
-    tailwindcss() // 2. إضافة Tailwind كـ Plugin لـ Vite مباشرة
+    tailwindcss()
   ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-    },
-  },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'https://fip.tadbeer.sa',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '/public/fip_origin/fip/fip/public/api'),
-      },
     },
   },
 })
