@@ -1,5 +1,5 @@
 import { TrendingUp, DollarSign, Target, Percent } from 'lucide-react';
-import type { ClientStats } from '../../types';
+import type { ClientStats } from '../../../../../types/types';
 
 export const BestPerformingYear = ({ data }: { data: ClientStats | null }) => {
   if (!data?.best_performing_year) return null;

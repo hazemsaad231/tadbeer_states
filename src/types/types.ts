@@ -75,3 +75,43 @@ export interface ServiceRequest {
 export interface ServiceRequestsResponse {
   service_requests: ServiceRequest[] | null;
 }
+
+export interface FinancialRecord {
+  id: number
+  user_id: number
+  created_at: string
+  updated_at: string
+  year: { id: number; year: number; created_at: string }
+  income_statement: {
+    revenues: string
+    direct_expenses: string
+    cost_of_goods_sold: string
+    gross_profit: string
+    administrative_expenses: string
+    marketing_expenses: string
+    net_profit: string
+  }
+  balance_sheet: {
+    fixed_assets: string
+    current_assets: string
+    cash_and_equivalents: string
+    receivables: string
+    inventory: string
+    current_liabilities: string
+    creditors: string
+    accrued_expenses: string
+    long_term_liabilities: string
+    loans: string
+    end_of_service_provision: string
+    equity: string
+    capital: string
+    retained_earnings: string
+  }
+  financial_indicators: {
+    contribution_margin: number
+    debt_ratio: number
+    liquidity_ratio: number
+    profitability_ratio: number
+    working_capital: number
+  }
+}

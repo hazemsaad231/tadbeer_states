@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Calendar, TrendingUp, BarChart2, CheckCircle, ArrowRight, ArrowLeft } from 'lucide-react';
-import Step1 from './components/Step1';
-import Step2 from './components/Step2';
-import Step3 from './components/Step3';
+import Step1 from '../add-update-report/components/Step1';
+import Step2 from '../add-update-report/components/Step2';
+import Step3 from '../add-update-report/components/Step3';
 import { useNavigate, useParams } from 'react-router-dom';
 import { API_BASE } from '../../../api/api';
 import { success as toastSuccess, Error as toastError } from '../../../ui/toasts';

@@ -1,6 +1,6 @@
 import { TrendingUp, Droplets, Scale, Activity } from 'lucide-react';
-import type { ClientStats } from '../../types';
-import { fmt } from '../utils';
+import type { ClientStats } from '../../../../../types/types';
+import { fmt } from '../../utils';
 import { ProfitabilityChart } from './charts/ProfitabilityChart';
 import { LiquidityChart } from './charts/LiquidityChart';
 import { LeverageChart } from './charts/LeverageChart';
@@ -80,7 +80,7 @@ export const RatioSections = ({ data }: { data: ClientStats | null }) => {
 
             {/* ══ يمين: Chart ══ */}
             <div
-              className="md:w-2/3 p-6"
+              className="md:w-3/4 p-6"
               style={{ borderLeft: '1px solid rgba(0,0,0,0.06)' }}
             >
               {/* Title + headline number */}
@@ -110,7 +110,7 @@ export const RatioSections = ({ data }: { data: ClientStats | null }) => {
             </div>
 
             {/* ══ يسار: KPI Cards مع Progress Bars ══ */}
-            <div className="md:w-1/3 p-6 flex flex-col justify-center gap-3">
+            <div className="md:w-1/4 p-6 flex flex-col justify-center gap-3">
               {group.kpis.map((kpi) => {
                 const progress = Math.min(Math.abs(Number(kpi.progress) * 100), 100);
                 return (

@@ -1,6 +1,6 @@
 import { CheckCircle2, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import type { Report } from '../../types';
+import type { Report } from '../../../../../types/types';
 
 
 export const RecentReportsList = ({ reports }: { reports: Report[] }) => (

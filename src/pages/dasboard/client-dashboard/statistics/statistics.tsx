@@ -3,11 +3,11 @@ import { useAuthContext } from '@/context/AuthContext';
 import { useFetch } from '@/hooks/useFetch';
 import { API_BASE } from '../../../../api/api';
 import { FileText, DollarSign, BarChart2, TrendingUp, Plus } from 'lucide-react';
-import { StatsCard } from '../components/StatsCard';
-import { RatioSections } from '../components/RatioSections';
-import type { ClientStats } from '../../types';
-import { BestPerformingYear } from '../components/BestYear';
-import { GrowthChart } from '../components/charts/GrowthChart';
+import { StatsCard } from './components/StatsCard';
+import { RatioSections } from './components/RatioSections';
+import type { ClientStats } from '../../../../types/types';
+import { BestPerformingYear } from './components/BestYear';
+import { GrowthChart } from './components/charts/GrowthChart';
 // import {ChartBar} from './components/charts/total';
 
 

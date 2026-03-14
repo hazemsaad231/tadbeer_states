@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useFetch } from '@/hooks/useFetch';
 import { API_BASE } from '../../../api/api';
-import type { AdminStats } from '../types';
+import type { AdminStats } from '../../../types/types';
 import { Plus, Building2, ChartNoAxesCombined, Users, CircleCheckBig, ArrowUpRight , Download, Sparkles } from 'lucide-react'
 
 

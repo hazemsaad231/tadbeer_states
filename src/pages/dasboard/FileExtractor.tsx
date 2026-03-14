@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Sparkles, Upload, Loader2, CheckCircle } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import * as pdfjsLib from 'pdfjs-dist';
@@ -26,6 +26,10 @@ const FileExtractor = ({ setFormData, formData, years }: Props) => {
   const [error, setError] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
 
+  // ✅ دايماً بيحمل آخر نسخة من formData — بيحل مشكلة الـ stale closure
+  const formDataRef = useRef(formData);
+  useEffect(() => { formDataRef.current = formData; }, [formData]);
+
   const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 
   const readExcelAsText = (file: File): Promise<string> =>
@@ -51,16 +55,25 @@ const FileExtractor = ({ setFormData, formData, years }: Props) => {
       reader.readAsText(file);
     });
 
-  const readPdfAsText = async (file: File): Promise<string> => {
+  // تحويل صفحات الـ PDF لصور base64 (يشتغل مع الـ scanned PDFs)
+  const renderPdfAsImages = async (file: File): Promise<string[]> => {
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-    let text = '';
+    const images: string[] = [];
     for (let i = 1; i <= pdf.numPages; i++) {
       const page = await pdf.getPage(i);
-      const content = await page.getTextContent();
-      text += content.items.map((item: any) => item.str).join(' ') + '\n';
+      const viewport = page.getViewport({ scale: 2 });
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      await page.render({
+        canvasContext: canvas.getContext('2d')!,
+        canvas,
+        viewport,
+      }).promise;
+      images.push(canvas.toDataURL('image/png').split(',')[1]);
     }
-    return text;
+    return images;
   };
 
   const extractData = async (file: File) => {
@@ -74,51 +87,45 @@ const FileExtractor = ({ setFormData, formData, years }: Props) => {
       const isCsv = ext === 'csv';
       const isPdf = ext === 'pdf';
 
-      let fileText = '';
+      const jsonSchema = `{
+  "year": "", "revenues": "", "direct_expenses": "", "cost_of_goods_sold": "",
+  "gross_profit": "", "administrative_expenses": "", "marketing_expenses": "",
+  "net_profit": "", "fixed_assets": "", "current_assets": "", "cash_and_equivalents": "",
+  "receivables": "", "inventory": "", "current_liabilities": "", "creditors": "",
+  "accrued_expenses": "", "long_term_liabilities": "", "loans": "",
+  "end_of_service_provision": "", "equity": "", "capital": "", "retained_earnings": ""
+}`;
 
-      if (isExcel) {
-        fileText = await readExcelAsText(file);
-      } else if (isCsv) {
-        fileText = await readFileAsText(file);
-      } else if (isPdf) {
-        fileText = await readPdfAsText(file);
+      const promptText = `أنت محاسب خبير. استخلص البيانات المالية وأرجع JSON فقط بهذا الشكل بدون أي نص آخر:\n${jsonSchema}\nضع الأرقام فقط بدون رموز عملة أو فواصل. في حقل year ضع السنة الميلادية فقط (مثل 2023). إذا لم تجد قيمة اتركها فارغة "".`;
+
+      let messages: any[];
+
+      if (isPdf) {
+        // PDF مسموح — نحوله لصور ونبعته لـ vision model
+        const images = await renderPdfAsImages(file);
+        messages = [{
+          role: 'user',
+          content: [
+            ...images.map((b64) => ({
+              type: 'image_url',
+              image_url: { url: `data:image/png;base64,${b64}` },
+            })),
+            { type: 'text', text: promptText },
+          ],
+        }];
       } else {
-        setError('الملفات المدعومة: Excel, CSV, PDF فقط');
-        setLoading(false);
-        return;
+        let fileText = '';
+        if (isExcel) {
+          fileText = await readExcelAsText(file);
+        } else if (isCsv) {
+          fileText = await readFileAsText(file);
+        } else {
+          setError('الملفات المدعومة: Excel, CSV, PDF فقط');
+          setLoading(false);
+          return;
+        }
+        messages = [{ role: 'user', content: `${promptText}\n\nبيانات الملف:\n${fileText}` }];
       }
-
-      const prompt = `
-أنت محاسب خبير. استخلص البيانات المالية من البيانات التالية وأرجع JSON فقط بهذا الشكل بدون أي نص آخر:
-{
-  "year": "",
-  "revenues": "",
-  "direct_expenses": "",
-  "cost_of_goods_sold": "",
-  "gross_profit": "",
-  "administrative_expenses": "",
-  "marketing_expenses": "",
-  "net_profit": "",
-  "fixed_assets": "",
-  "current_assets": "",
-  "cash_and_equivalents": "",
-  "receivables": "",
-  "inventory": "",
-  "current_liabilities": "",
-  "creditors": "",
-  "accrued_expenses": "",
-  "long_term_liabilities": "",
-  "loans": "",
-  "end_of_service_provision": "",
-  "equity": "",
-  "capital": "",
-  "retained_earnings": ""
-}
-ضع الأرقام فقط بدون رموز عملة أو فواصل. في حقل year ضع السنة الميلادية فقط (مثل 2023). إذا لم تجد قيمة اتركها فارغة "".
-
-بيانات الملف:
-${fileText}
-      `;
 
       const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
@@ -127,8 +134,9 @@ ${fileText}
           Authorization: `Bearer ${API_KEY}`,
         },
         body: JSON.stringify({
-          model: 'llama-3.1-8b-instant',
-          messages: [{ role: 'user', content: prompt }],
+          // vision model للـ PDF، text model للباقي
+          model: isPdf ? 'meta-llama/llama-4-scout-17b-16e-instruct' : 'llama-3.1-8b-instant',
+          messages,
           temperature: 0.1,
         }),
       });
@@ -141,7 +149,7 @@ ${fileText}
       const extracted = JSON.parse(clean);
 
       // مطابقة السنة مع الـ years array
-      let yearId = formData.yearId;
+      let yearId = formDataRef.current.yearId;
       if (extracted.year) {
         const matchedYear = years.find(
           (y) => String(y.year) === String(extracted.year)
@@ -152,7 +160,7 @@ ${fileText}
       // حذف year من الـ extracted عشان ميتحطش في formData
       const { year, ...rest } = extracted;
 
-      setFormData({ ...formData, ...rest, yearId });
+      setFormData({ ...formDataRef.current, ...rest, yearId });
       setSuccess(true);
       toast.success('تم استخلاص البيانات بنجاح! تحقق من الحقول المعبأة.');
     } catch (e) {
@@ -192,14 +200,19 @@ ${fileText}
           <p className="text-xs text-red-500 max-w-xs text-right">{error}</p>
         )}
 
+        {/* ✅ الإصلاح: e.target.value = '' بعد الاختيار علشان نفس الملف يشتغل تاني مرة */}
         <input
           ref={fileRef}
           type="file"
           className="hidden"
           accept=".xlsx,.xls,.csv,.pdf"
-          onChange={(e) =>
-            e.target.files?.[0] && extractData(e.target.files[0])
-          }
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              extractData(file);
+              e.target.value = '';
+            }
+          }}
         />
 
         <button

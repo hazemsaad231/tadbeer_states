@@ -2,7 +2,7 @@ import { useFetch } from '@/hooks/useFetch';
 import { API_BASE } from '@/api/api';
 import { Link } from 'react-router-dom';
 import { Plus, ClipboardList, Clock, CheckCircle2, XCircle, Calendar} from 'lucide-react';
-import  type { ServiceRequestsResponse } from '../../types';
+import  type { ServiceRequestsResponse } from '../../../../types/types';
 
 
 

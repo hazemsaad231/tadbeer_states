@@ -8,7 +8,7 @@ import RegisterPage from './pages/auth/register'
 import Login from './pages/auth/login'
 import Dashboard from './pages/dasboard/admin-dashboard/Dashboard'
 import ClientDashboard from './pages/dasboard/client-dashboard/statistics/statistics'
-import NewReport from './pages/dasboard/AddReport/Add_Update_Report'
+import NewReport from './pages/dasboard/add-update-report/Add_Update_Report'
 import Onboarding from './pages/dasboard/Onboarding'
 import { Toaster } from 'react-hot-toast';
 import Reports from './pages/dasboard/client-dashboard/reborts/reborts'

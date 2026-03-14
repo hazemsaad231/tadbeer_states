@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '@/context/AuthContext';
 import { useFetch } from '@/hooks/useFetch';
 import { API_BASE } from '@/api/api';
-import NewReport from './AddReport/Add_Update_Report';
+import NewReport from './add-update-report/Add_Update_Report';
 import { ArrowRight } from 'lucide-react';
 
 
