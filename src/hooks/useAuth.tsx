@@ -13,14 +13,20 @@ export const useAuth = () => {
   const navigate = useNavigate();
   const { setUser } = useAuthContext();
 
-  // دالة مساعدة للتعامل مع الأخطاء (DRY Principle)
   const handleError = (error: any) => {
-    console.log("Error Response:", error);
-    const message = Array.isArray(error.response.data.message)
-      ? error.response.data.message[0]
-      : error.response.data.message;
-    toastError(message || "حدث خطأ ما، حاول مرة أخرى");
-  };
+  console.log("Error Response:", error);
+
+  if (!error.response) {
+    toastError(error.message || "حدث خطأ ما، حاول مرة أخرى");
+    return;
+  }
+
+  const message = Array.isArray(error.response?.data?.message)
+    ? error.response.data.message[0]
+    : error.response?.data?.message;
+
+  toastError(message || "حدث خطأ ما، حاول مرة أخرى");
+};
 
   // 1. تسجيل الدخول
   const login = async (data: any) => {

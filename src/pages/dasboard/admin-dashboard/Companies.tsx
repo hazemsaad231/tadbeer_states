@@ -39,7 +39,7 @@ const CompaniesPage = () => {
               <p className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--scondary)' }}>{companiesData.length}</p>
             </div>
             <div
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center shrink-0"
               style={{ backgroundColor: 'var(--scondary)' + '22' }}
             >
               <Building2 className="w-5 h-5" style={{ color: 'var(--scondary)' }} />
@@ -95,11 +95,11 @@ const CompaniesPage = () => {
             <input
               type="text"
               placeholder="البحث عن منشأة..."
-              className="w-full pr-10 pl-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-[var(--scondary)] transition-colors"
+              className="w-full pr-10 pl-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-(--scondary) transition-colors"
             />
           </div>
           <select
-            className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-[var(--therery)] transition-colors"
+            className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-(--therery) transition-colors"
           >
             <option value="">جميع القطاعات</option>
             <option value="trade">تجارة</option>
@@ -108,7 +108,7 @@ const CompaniesPage = () => {
             <option value="ecommerce">تجارة إلكترونية</option>
           </select>
           <select
-            className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-[var(--therery)] transition-colors"
+            className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-(--therery) transition-colors"
           >
             <option value="">جميع الحالات</option>
             <option value="active">نشط</option>

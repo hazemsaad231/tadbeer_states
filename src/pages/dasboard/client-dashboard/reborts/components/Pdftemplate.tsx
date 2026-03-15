@@ -44,10 +44,10 @@ const PdfTemplate = forwardRef<HTMLDivElement, { record: FinancialRecord }>(({ r
     ]} />
 
     <PdfSection title="المؤشرات المالية" valueColor="#10B981" rows={[
-      { label: 'نسبة الربحية',    value: `${(record.financial_indicators.profitability_ratio * 100).toFixed(2)}%` },
-      { label: 'نسبة السيولة',    value: `${(record.financial_indicators.liquidity_ratio * 100).toFixed(4)}%` },
-      { label: 'نسبة الديون',     value: `${(record.financial_indicators.debt_ratio * 100).toFixed(2)}%` },
-      { label: 'هامش المساهمة',  value: `${record.financial_indicators.contribution_margin?.toFixed(2)}` },
+      { label: 'نسبة الربحية',    value: fmt(Number((record.financial_indicators.profitability_ratio * 100).toFixed(2))) + '%' },
+      { label: 'نسبة السيولة',    value: fmt(Number((record.financial_indicators.liquidity_ratio * 100).toFixed(4))) + '%' },
+      { label: 'نسبة الديون',     value: fmt(Number((record.financial_indicators.debt_ratio * 100).toFixed(2))) + '%' },
+      { label: 'هامش المساهمة',  value: fmt(Number(record.financial_indicators.contribution_margin?.toFixed(2) || 0)) },
       { label: 'رأس المال العامل', value: fmt(record.financial_indicators.working_capital) },
     ]} />
   </div>
